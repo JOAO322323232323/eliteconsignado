@@ -3,7 +3,7 @@ import mysql.connector
 class DATABASE(object):
 
     USERDB = 'adminbanco'
-    PASSDB = '!=Str000'
+    PASSDB = 'Elite@12'
     HOSTDB = '62.72.8.214'
     DATADB = 'dev'
 
