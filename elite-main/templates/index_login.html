@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-br"> 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite - Login</title>
+    <link rel="stylesheet" href= "{{ url_for('static',filename='styles/style.css') }}">
+</head>
+<style>
+    body {
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: initial;
+    }
+
+    .main-login {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .left-login {
+        display: flex;
+        justify-content: left;
+        align-items: left;
+        min-height: 100vh;
+        margin-top: 600px;
+    }
+
+    .right-login {
+        display: flex;
+        justify-content: center; /* Centraliza horizontalmente */
+        align-items: center; /* Centraliza verticalmente */
+        min-height: 100vh;
+    }
+
+    .card-login {
+        background-color: #2f2841;
+        border-radius: 20px;
+        box-shadow: 0px 10px 40px #00000056;
+        width: 60%;
+        text-align: center;
+        max-height: 400px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .textfield_user,
+    .textfield_pass {
+        margin: 10px; /* Espaçamento entre os campos */
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .textfield label {
+        color: #f0ffffde;
+    }
+
+    .textfield input {
+        width: 100%;
+        border: none;
+        text-align: center;
+        background: #514869;
+        color: #f0ffffde;
+        font-size: 12pt;
+        box-shadow: 0px 10px 40px #00000056;
+        outline: none;
+        box-sizing: border-box;
+       
+    }
+
+    .btn-login {
+        width: 80%;
+        padding: 16px 0px;  
+        border: none;
+        border-radius: 10px;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 800;
+        letter-spacing: 3px;
+        color: #2b134b;
+        background-color: #00ff88;
+        cursor: pointer;
+        box-shadow: 0px 10px 40px -12px #00ff8052;
+        align-items: center;
+    }
+
+    .cadastro {
+        color: #b5ffdc;
+        margin-top: 10px; /* Espaçamento superior */
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    a:-webkit-any-link {
+        color: #b5ffdc;
+    }
+
+</style>
+<body>
+    <div class="main-login">    
+        <div class="left-login">
+            <h1>Bem vindo ao Elite!!!</h1>
+        </div>
+        <div class="right-login">
+            <div class="card-login">
+                <form action="" method="post">
+                    <div class="textfield_user">
+                        <label for="usuario">Usuario</label><br>
+                        <input type="text" placeholder="Username" name="username" value="{{request.form.username }}">
+                    </div>
+                    <div class="textfield_pass">
+                        <label for="senha">Senha</label><br>
+                        <input type="password" placeholder="Password" name="password" value="{{request.form.password }}">
+                    </div>
+                    
+                    <button class="btn-login" type="submit">Login</button>
+                </form>
+                <div class="cadastro">
+                    <a href="/cadastro">Novo por aqui? Clique aqui para se cadastrar.</a>
+                </div>
+                {% if error %}
+                    <p class="error"><strong>Error:</strong> {{ error }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

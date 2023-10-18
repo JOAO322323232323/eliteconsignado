@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<body>
+<div>
+    <h2>Gerenciar log</h2>
+    <form action="" method="post">
+    <label>User:
+    <select name="comp_select" class="selectpicker form-control">
+        {% for user in usuario %}
+        <option value="{{ user[0] }}">{{ user[0] }}</option>
+        {% endfor %}
+    </select>
+    <input class="btn btn-default" type="submit" value="Pesquisar">
+    </form>
+    <body>
+        <table>
+            <thead>
+                <tr>
+                    <th>CPF</th>
+                    <th>NB</th>
+                    <th>CPF Rep</th>
+                    <th>Status do Processo</th>
+                    <th>Data da Última Atualização</th>
+                    <th>Código de Status</th>
+                    <th>Usuário do Log</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if resultado %}
+                    {% for result in resultado['Resultado'] %}
+                        <tr>
+                            <td>{{ result[0] }}</td>
+                            <td>{{ result[1] }}</td>
+                            <td>{{ result[2] }}</td>
+                            <td>
+                                <div class="tooltip" onclick="mostrarDados('{{ result[3] }}')">
+                                    {{ result[3] | truncate(50)}}
+                                    <span class="tooltiptext">Clique para abrir os dados.</span>
+                                </div>
+                            </td>
+                            <td>{{ result[4] }}</td> 
+                            <td>{{ result[5] }}</td>
+                            <td>{{ result[6] }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="fecharModal()">&times;</span>
+                <div id="dadosCompletos"></div>
+            </div>
+        </div>
+    </body>
+</div>
+</body>
+  <script>
+        // Função para mostrar os dados completos em um modal
+        function mostrarDados(dados) {
+            var modal = document.getElementById("myModal");
+            var dadosCompletos = document.getElementById("dadosCompletos");
+            dadosCompletos.innerHTML = dados;
+            modal.style.display = "block";
+        }
+
+        // Função para fechar o modal
+        function fecharModal() {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+    </script>
+</html>
+
+{% endblock %}
+
+{% set page_title = "Elite - Log" %}

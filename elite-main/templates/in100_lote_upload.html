@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<style>
+    .botao_tabela {
+        padding: 8px; 
+        font-size: 14px; 
+        margin: 10px;
+        border: none;
+        border-radius: 8px;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 800;
+        letter-spacing: 3px;
+        color: #2b134b;
+        background-color: #00ff88;
+        cursor: pointer;
+        box-shadow: 0px 10px 40px -12px #00ff8052;
+        -webkit-appearance: button;
+        -moz-appearance: button;
+        appearance: button;
+        text-decoration: none;
+    }
+    .botao {
+        margin: 10px;
+        border: none;
+        border-radius: 8px;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 800;
+        letter-spacing: 3px;
+        color: #2b134b;
+        background-color: #00ff88;
+        cursor: pointer;
+        box-shadow: 0px 10px 40px -12px #00ff8052;
+    }
+
+    h2, h5 {
+        color: rgb(217, 255, 255);
+    }
+
+    .importante_aviso {
+        color: rgb(246, 134, 104)
+    }
+</style>
+
+<h2>Instruções para enviar o arquivo:</h2>
+
+<h5>
+    1. Primeiro clique aqui no botão para baixar o arquivo modelo para introduzir no sistema os dados para o lote:
+    <button id="downloadButton" class="btn btn-primary">Baixar Arquivo</button>
+</h5>
+<h5>
+    2. Adicione todos os CPF's na coluna de CPF e todos os números de benefícios na coluna NB e caso tenha, adicionar também os CPF's dos representantes na coluna CPF_REP.
+</h5>
+<h5>
+    3. Salve o arquivo de Excel e suba o arquivo aqui nesta página do site para ser enviado para o sistema. 
+</h5>
+<h5>
+    ATENÇÃO: lotes de CPF, dependendo da quantidade de CPF's pode acabar demorando a ser processado, pois o INSS pode acabar tendo instabilidade em seu sistema, então por favor aguarde com paciência.  
+</h5>
+<h5 class="importante_aviso">
+    IMPORTANTE: NÃO ALTERE O NOME DAS COLUNAS! Caso contrário o sistema não irá validar o lote.
+</h5>
+<body>
+    <h3>Envie um arquivo</h3>
+    <form method="POST" action="/upload_in100" enctype="multipart/form-data">
+        <input type="file" name="arquivo">
+        <input type="submit" class=botao value="Enviar">
+    </form>
+</body>
+<br>
+{% if result %}
+    <body>
+        <table>
+            <thead>
+                <tr>
+                    <th>Lote ID</th>
+                    <th>Total de CPF's</th>
+                    <th>Status lote</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if result %}
+                    {% for linha in result %}
+                        <tr>
+                            <td>{{ linha[0] }}</td>
+                            <td>{{ linha[1] }}</td>
+                            <td>
+                                Não processado: {{linha[2]}} || Processado: {{linha[3]}}
+                                <a class="botao_tabela" href="/download_lote_finalizado_in100?lote_id={{linha[0]}}">Download</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="fecharModal()">&times;</span>
+                <div id="dadosCompletos"></div>
+            </div>
+        </div>
+    </body>
+<body>
+
+{% endif %}
+</body>
+
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="fecharModal()">&times;</span>
+        <div id="dadosCompletos"></div>
+    </div>
+</div>
+
+<script>
+        // Função para mostrar os dados completos em um modal
+        function mostrarDados(dados) {
+            var modal = document.getElementById("myModal");
+            var dadosCompletos = document.getElementById("dadosCompletos");
+            dadosCompletos.innerHTML = dados;
+            modal.style.display = "block";
+        }
+
+        // Função para fechar o modal
+        function fecharModal() {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+
+        // Função para obter o valor de um parâmetro da URL por nome (mesma função do exemplo anterior)
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        // Verificar se há uma mensagem na URL
+        var mensagem = getParameterByName('mensagem');
+        if (mensagem) {
+            // Exibir a mensagem em uma janela modal ou de alerta
+            mostrarDados(mensagem);
+        }
+        document.getElementById("downloadButton").addEventListener("click", function() {
+            window.location.href = "{{ url_for('download_excel_lote') }}";
+        });
+</script>
+   
+{% endblock %}
+
+
+{% set page_title = "Elite - Lote IN100" %}

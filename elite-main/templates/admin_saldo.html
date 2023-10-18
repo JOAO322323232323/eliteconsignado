@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+.input-group {
+  display: flex; /* Use o flexbox para alinhar horizontalmente */
+  align-items: center; /* Alinhe verticalmente ao centro */
+  justify-content: flex-start; /* Alinhe à esquerda */
+  margin-bottom: 10px; /* Adicione espaçamento inferior, se necessário */
+}
+
+.input-group label {
+  margin-right: 10px; /* Adicione um espaço à direita entre o rótulo e o campo de entrada */
+}
+</style>
+
+<div class="container">
+  <h1>Administrar saldo</h1>
+  <form action="" method="post">
+    <label>Selecionar usuário:
+      <select name="comp_select" class="selectpicker form-control">
+          {% for user in usuario %}
+          <option value="{{ user[0] }}">{{ user[0] }}</option>
+          {% endfor %}
+      </select>
+    <br>
+    <label>Selecionar módulo:
+      <select name="mod_select" class="selectpicker form-control">
+          {% for opt in opt_saldo %}
+          <option value="{{ opt }}">{{ opt }}</option>
+          {% endfor %}
+      </select>
+    <div class="input-group">
+      <label for="add_cred">Adicionar Créditos:</label>
+      <input type="text" name="add_cred" id="add_cred">
+      <input class="btn btn-default" type="submit" value="Adicionar">
+    </div>
+  </form>
+  {% if resultado %}
+    <p class="Resultado"><strong>Resultado:</strong> {{ resultado['Resultado'] }}
+  {% endif %}
+</div>
+
+{% endblock %}
+
+{% set page_title = "Elite - Administrar saldo" %}
