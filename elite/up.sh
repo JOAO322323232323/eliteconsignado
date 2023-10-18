@@ -1,5 +1,5 @@
 #!/bin/bash
-rm -rf eliteconsignado/
+rm -rf elite/
 git clone https://github.com/JOAO322323232323/eliteconsignado.git
 cd elite/
 sudo docker-compose build
