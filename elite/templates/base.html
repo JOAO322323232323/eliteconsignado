@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+    <title>{{ page_title }}</title>
+    <style>
+        /* Estilo para o menu vertical */
+        .menu {
+            background-color: #333;
+            color: white;
+            width: 200px; /* Largura do menu vertical */
+            position: fixed; /* Fixar o menu à esquerda */
+            top: 0;
+            bottom: 0;
+            overflow-y: auto; /* Adicionar uma barra de rolagem se necessário */
+            padding: 10px;
+        }
+
+        .menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            margin: 10px 0;
+            padding: 10px;
+        }
+
+        .menu a:hover {
+            text-decoration: underline;
+        }
+
+        /* Estilo para o conteúdo à direita do menu vertical */
+        .conteudo {
+            margin-left: 220px; /* Largura do menu + espaço de margem */
+            padding: 20px;
+        }
+
+        /* Estilo para os botões */
+        .botao {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .botao:hover {
+            background-color: #0056b3;
+        }
+
+        .info-usuario {
+            text-align: center;
+        }
+
+        .saldo-info {
+            font-size: 11px; 
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .logout-button {
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+        }
+
+        .saldo-info-dist {
+            font-size: 11px; 
+            font-weight: bold;
+            margin: 5px 0;
+            margin-bottom: 25px;
+        }
+
+        .menu img {
+            width: 150px; /* Define a largura desejada, por exemplo, 150 pixels */
+            height: auto; /* A altura se ajustará automaticamente de acordo com a largura */
+            margin-top: 35px;
+            margin-bottom: 45px;
+            margin-right: 25px; /* Adicione margem à direita para separar a logomarca do título */
+        }
+
+        .saldo-info-menu {
+            text-align: left;
+        }
+
+        .saldo-tittle {
+            color: #7ed956;
+            -webkit-text-stroke-width: 0.5px;
+            -webkit-text-stroke-color: #000;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <img src="{{url_for('static', filename='file.jpg')}}" text-align: center="middle" />
+        <div class="info-usuario">
+            <p class="saldo-info">Usuário: {{ username }}</p>
+        </div>
+        <a href="{{ url_for('painel') }}">Elite Painel</a>
+        {% if super_perm == 1 %}
+        <a href="{{ url_for('criar_usuario') }}">Criar Usuario</a>
+        <a href="{{ url_for('gerenc_saldo') }}">Gerenciar Saldo</a>
+        <a href="{{ url_for('gerenc_log') }}">Visualizar Log</a>
+        {% endif %}
+        {% for mod in permissao %}
+            <a href="{{ url_for(mod) }}">{{ mod[0].upper() + mod[1:]}}</a>
+        {% endfor %}
+        <br>
+        <a class="logout-button" href="{{ url_for('logout') }}">Sair do Sistema</a>
+        <br>
+    </div>
+    <div class="conteudo">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  h2, h4 {
+      color: #d5ffeb;
+  }
+  b, td {
+      color: #000000;
+  }
+  button {
+    width: 200%
+  }
+  .cpf_input {
+    margin: 15px;
+    width: 200%
+  }
+  .erro {
+    color: rgb(255, 228, 208);
+  }
+  .texto_central {
+    text-align: center;
+  }
+</style>
+<body>
+  <h2>Consulta CPF</h2>
+  <h5 id="h5">Aviso: consulta demora em torno de 30 segundos para retorno de dados.</h5>
+  <div class="container">
+    <form action="" method="post">
+      <input class="cpf_input" type="text" name="CPF" placeholder="CPF">
+      <button type="submit">Pesquisar</button>
+    </form>
+    {% if resultado %}
+      <h2>Resultado pesquisa:</h2>
+        <br>
+          <table id="customers">
+              {% if resultado['status'] == 'success' %}
+                <tr>
+                  <td class="texto_central"><b>DADOS PRINCIPAIS</b></td>
+                </tr>
+                <tr>
+                  <td><b>CPF</b> : {{resultado['results']['CPF']}}</td>
+                  <td><b>Nome completo</b> : {{resultado['results']['NOME']}}</td>
+                  <td><b>Sexo</b> : {{resultado['results']['SEXO']}}</td>
+                  <td><b>Data de nascimento</b> : {{resultado['results']['NASC']}}</td>
+                </tr>
+                <tr>
+                  <td><b>Nome da Mãe</b> : {{resultado['results']['NOME_MAE']}}</td>
+                  <td><b>Nome do Pai</b> : {{resultado['results']['NOME_PAI']}}</td>
+                  <td><b>RG</b> : {{resultado['results']['RG']}}</td>
+                  <td><b>Nacionalidade</b> : {{resultado['results']['NACIONALID']}}</td>
+                </tr>
+                <tr>
+                  <td><b>Data de atualização dos dados</b> : {{resultado['results']['DT_SIT_CAD']}}</td>
+                  <td><b>Orgão emissor</b> : {{resultado['results']['ORGAO_EMISSOR']}}</td>
+                  <td><b>UF Emissão</b> : {{resultado['results']['UF_EMISSAO']}}</td>
+                  <td><b>Renda declarada</b> : {{resultado['results']['RENDA']}}</td>
+                </tr>
+                <tr>
+                  <td><b>Titulo de eleitor</b> : {{resultado['results']['TITULO_ELEITOR']}}</td>
+                  <td><b>Cadastro Mosaic</b> : {{resultado['results']['CD_MOSAIC_NOVO']}}</td>
+                  <td><b>Mosaic Secundario</b> : {{resultado['results']['CD_MOSAIC_SECUNDARIO']}}</td>
+                </tr>
+                <tr>
+                  <td class="texto_central"><b>TELEFONES</b></td>
+                </tr>
+                {% for telefone in resultado['results']['telefones'] %}
+                  <tr>
+                    <td><b>DDD</b> : {{telefone['DDD']}}</td>
+                    <td><b>Telefone</b> : {{telefone['TELEFONE']}}</td>
+                    <td><b>Classificação</b> : {{telefone['CLASSIFICACAO']}}</td>
+                    <td><b>Data cadastro do telefone</b> : {{telefone['DT_INCLUSAO']}}</td>
+                  </tr>
+                {% endfor %}
+                <tr>
+                  <td class="texto_central"><b>EMAILS</b></td>
+                </tr>
+                {% for email_add in resultado['results']['emails'] %}
+                  <tr>
+                    <td><b>Email</b> : {{email_add['EMAIL']}}</td>
+                    <td><b>Score</b> : {{email_add['EMAIL_SCORE']}}</td>
+                    <td><b>Email pessoal</b> : {{email_add['EMAIL_PESSOAL']}}</td>
+                    <td><b>Data inclusao do email</b> : {{email_add['DT_INCLUSAO']}}</td>
+                  </tr>
+                {% endfor %}
+                <tr>
+                  <td class="texto_central"><b>ENDEREÇOS</b></td>
+                </tr>
+                {% for ender in resultado['results']['enderecos'] %}
+                  <tr>
+                    <td><b>Tipo</b> : {{ender['LOGR_TIPO']}}</td>
+                    <td><b>Endereço</b> : {{ender['LOGR_NOME']}}</td>
+                    <td><b>Número</b> : {{ender['LOGR_NUMERO']}}</td>
+                    <td><b>Complemento</b> : {{ender['LOGR_COMPLEMENTO']}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Bairro</b> : {{ender['BAIRRO']}}</td>
+                    <td><b>Cidade</b> : {{ender['CIDADE']}}</td>
+                    <td><b>Estado UF</b> : {{ender['UF']}}</td>
+                    <td><b>CEP</b> : {{ender['CEP']}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Data atualização</b> : {{ender['DT_ATUALIZACAO']}}</td>
+                    <td><b>Data inclusão</b> : {{ender['DT_INCLUSAO']}}</td>
+                  </tr>
+                {% endfor %}
+              {% else %}
+                <h3>{{resultado}}</h3>
+              {% endif %}
+          </table>
+    {% endif %}
+    {% if erro %}
+    <h5 class="erro">{{ erro }}</h5>
+    {% endif %}
+  </div>
+</body>
+{% endblock %}
+
+{% set page_title = "Elite - BUSCA CPF" %}

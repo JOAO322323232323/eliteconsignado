@@ -1,0 +1,9 @@
+flask
+pandas
+gunicorn
+mysql-connector-python
+requests
+cloudscraper
+pandas
+openpyxl
+httpx

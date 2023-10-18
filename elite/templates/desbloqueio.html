@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  h2 {
+    color: #d5ffeb;
+  }
+  b, td {
+    color: #ffffff;
+  }
+  select {
+    border-radius: 10px;
+    width: 100%;
+    background: #514869;
+    color: #f0ffffde;
+    font-size: 12pt;
+    box-shadow: 0px 10px 40px #00000056;
+    box-sizing: border-box;
+    display: inline-block;
+    padding: 15px;
+    margin: 10px; 
+  }
+  .modal-content {
+    color: #ffffff;
+  }
+  .erro_saldo {
+    color: #F08080;
+  }
+  form {
+    margin-bottom: 16px;
+  }
+    
+</style>
+<body>
+  <h2>Desbloqueio</h2>
+  <div class="container">
+    {% if superuser %}
+        <h2 id="h5">Desbloquear manualmente:</h2>
+        <form action="" method="post">
+        <input type="text" name="nb_liberacao" placeholder="Numero de beneficio:">
+        <input type="text" name="obs_liberacao" placeholder="Observação:">
+        <select name="stts_liberacao">
+            <option value="Cancelado">Cancelado</option>
+            <option value="Concluido">Concluido</option>
+            <option value="Em processamento">Em processamento</option>
+        </select>
+        <button type="submit" name='desbloquear_botao'>Desbloquear</button>
+        </form>
+        {% if resultado %}
+            <body>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>CPF</th>
+                            <th>NB</th>
+                            <th>CPF Rep</th>
+                            <th>Status do Processo</th>
+                            <th>Observações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if resultado %}
+                            {% for result in resultado %}
+                                <tr>
+                                    <td>{{ result[0] }}</td>
+                                    <td>{{ result[1] }}</td>
+                                    <td>{{ result[2] }}</td>
+                                    <td>{{ result[3] }}</td> 
+                                    <td>
+                                        {% if result[4] == 'Em processamento' %}
+                                            {{ result[4] }} <img src="{{url_for('static', filename='ezgif.com-crop.gif')}}" alt="Em processamento" style="width: 15px; height: 15px;">
+                                        {% else %}
+                                            {{ result[4] }}
+                                        {% endif %} 
+                                    </td>
+                                    <td>{{ result[5] }}</td> 
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+                <div id="myModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="fecharModal()">&times;</span>
+                        <div id="dadosCompletos"></div>
+                    </div>
+                </div>
+            </body>
+        {% endif %}
+        <h2 id="h5">Desbloqueados recentemente:</h2>
+        <h5 id="avisodes">Aviso: o histórico é limpo após uma semana.</h5>
+        {% if desbloqueados %}
+            <body>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>CPF</th>
+                            <th>NB</th>
+                            <th>CPF Rep</th>
+                            <th>Status do Processo</th>
+                            <th>Observações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if desbloqueados %}
+                            {% for desbl in desbloqueados %}
+                                <tr>
+                                    <td>{{ desbl[0] }}</td>
+                                    <td>{{ desbl[1] }}</td>
+                                    <td>{{ desbl[2] }}</td>
+                                    <td>{{ desbl[3] }}</td>
+                                    <td>{{ desbl[4] }}</td> 
+                                    <td>
+                                        <div class="tooltip" onclick="mostrarDados('Observações: {{ desbl[5] }}')">
+                                            {{ desbl[5] | truncate(50)}}
+                                            <span class="tooltiptext">Clique para abrir os dados.</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+                <div id="myModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="fecharModal()">&times;</span>
+                        <div id="dadosCompletos"></div>
+                    </div>
+                </div>
+            </body>
+        {% endif %}
+    {% else %}
+
+        <h2 id="h5">Solicitar desbloqueio:</h2>
+        <h5 id="h5">Aviso: desbloqueio é feito manualmente, aguarde.</h5>
+        <form action="" method="post">
+        <input type="text" name="CPF" placeholder="CPF">
+        <input type="text" name="NB" placeholder="Número do benefício:">
+        <input type="text" name="cpf_rep" placeholder="CPF Representante (Opcional):">
+        <button type="submit" name='solicitar_botao'>Solicitar desbloqueio</button>
+        </form>
+        {% if erro %}
+            <h2 class='erro_saldo'>{{ erro }}</h2>
+        {% endif %}
+        {% if resultado %}
+            <body>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>CPF</th>
+                            <th>NB</th>
+                            <th>CPF Rep</th>
+                            <th>Status do Processo</th>
+                            <th>Observações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if resultado %}
+                            {% for result in resultado %}
+                                <tr>
+                                    <td>{{ result[0] }}</td>
+                                    <td>{{ result[1] }}</td>
+                                    <td>{{ result[2] }}</td>
+                                    <td>{{ result[3] }}</td> 
+                                    <td>{{ result[4] }}</td> 
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+                <div id="myModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="fecharModal()">&times;</span>
+                        <div id="dadosCompletos"></div>
+                    </div>
+                </div>
+            </body>
+        {% endif %}
+        <h2 id="h5">Desbloqueados recentemente:</h2>
+        <h5 id="h5">Aviso: o histórico é limpo após uma semana.</h5>
+        {% if desbloqueados %}
+            <body>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>CPF</th>
+                            <th>NB</th>
+                            <th>CPF Rep</th>
+                            <th>Status do Processo</th>
+                            <th>Observações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if desbloqueados %}
+                            {% for desbl in desbloqueados %}
+                                <tr>
+                                    <td>{{ desbl[0] }}</td>
+                                    <td>{{ desbl[1] }}</td>
+                                    <td>{{ desbl[2] }}</td>
+                                    <td>{{ desbl[3] }}</td> 
+                                    <td>
+                                        <div class="tooltip" onclick="mostrarDados('Observações: {{ desbl[5] }}')">
+                                            {{ desbl[4] | truncate(50)}}
+                                            <span class="tooltiptext">Clique para abrir os dados.</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+                <div id="myModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="fecharModal()">&times;</span>
+                        <div id="dadosCompletos"></div>
+                    </div>
+                </div>
+            </body>
+        {% endif %}
+    {% endif %}
+  </div>
+</body>
+<script>
+        // Função para mostrar os dados completos em um modal
+        function mostrarDados(dados) {
+            var modal = document.getElementById("myModal");
+            var dadosCompletos = document.getElementById("dadosCompletos");
+            dadosCompletos.innerHTML = dados;
+            modal.style.display = "block";
+        }
+
+        // Função para fechar o modal
+        function fecharModal() {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+
+        // Função para obter o valor de um parâmetro da URL por nome (mesma função do exemplo anterior)
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        // Verificar se há uma mensagem na URL
+        var mensagem = getParameterByName('mensagem');
+        if (mensagem) {
+            // Exibir a mensagem em uma janela modal ou de alerta
+            mostrarDados(mensagem);
+        }
+</script>
+{% endblock %}
+
+{% set page_title = "Elite - Painel" %}

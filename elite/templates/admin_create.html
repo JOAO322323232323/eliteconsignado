@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+    
+    <div class="container">
+        <h1>Criar usuario</h1>
+        <form action="" method="post">
+          <input type="text" name="user_novo" placeholder="Usuario:">
+          <button type="submit">Criar novo usuario</button>
+        </form>
+        {% if resultado %}
+          {% if resultado['Status'] == 409 %}
+            <p class="Resultado" id="resultado"><strong>Resultado:</strong> Usuario já cadastrado no sistema.</p>
+          {% elif resultado['Status'] == 200 %}
+            <p class="Resultado" id="resultado"><strong>Resultado:</strong> Usuario cadastrado com sucesso:</p>
+            <p class="Resultado" id="resultado"><strong>Login:</strong> {{ resultado['ListUser']['Resultado'][0] }}</p>
+            <p class="Resultado" id="resultado"><strong>Senha:</strong> {{ resultado['ListUser']['Resultado'][1] }}</p>
+            <p class="Resultado" id="resultado"><strong>Aviso:</strong> Não atualizar a página, guardar dados sigilosos, não haverá outra chance de visualizar estes dados novamente.</p>
+          {% endif %}
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+{% set page_title = "Elite - Criar usuário" %}
