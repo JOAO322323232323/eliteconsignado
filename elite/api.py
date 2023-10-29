@@ -42,7 +42,7 @@ class API_qmc(object):
             tel = random.randint(900000000, 999999999)
             
             usuario_cod = self.log_user()
-            #usuario_cod = '15250052789_900048'
+            # usuario_cod = '15250052789_900048'
 
             headers = {
                 'Content-Type':'application/json; charset=UTF-8',
