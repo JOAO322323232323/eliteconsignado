@@ -1,9 +1,6 @@
-import requests, json, random, datetime, database, assets_js, time
+import requests, json, random, datetime, time
 
 class API_qmc(object):
-
-    def log_user(self):
-        return database.DATABASE().execute_fetch_one('SELECT login FROM in100_logins WHERE tentativas > 0 ORDER BY RAND() LIMIT 1;')[0]
 
     def main(self, cpf, cod_beneficio, cpf_rep=None):
         try:
@@ -36,19 +33,25 @@ class API_qmc(object):
     def get_autorizacao(self, cpf, cod_beneficio, cpf_rep=None):
 
         try:
+
             session = requests.Session()
 
-            ddd = '81'
+            ddd = '11'
             tel = random.randint(900000000, 999999999)
-            
-            usuario_cod = self.log_user()
-            #usuario_cod = '18500078707_900151'
 
-            headers = {
-                'Content-Type':'application/json; charset=UTF-8',
-                'Content-Ack':f'{assets_js.generate_k()}',
-                'X-Requested-With':'XMLHttpRequest'
-                }
+            def cod_user():
+                cod_users = [
+                '03174741700_900151',
+                '15411844754_900151',
+                '07225117440_900151'
+                
+]
+                
+                return random.choice(cod_users)
+            
+            usuario_cod = cod_user()
+
+            headers = {'Content-Type':'application/json; charset=UTF-8'}
 
             if cpf_rep:
 
@@ -75,16 +78,13 @@ class API_qmc(object):
                         "enviar_email": "false"
                         }
             
-            res = session.post("https://queromaiscredito.app/DataPrev/e-consignado/beneficios/cartao_consulta_in100.php", json=data, headers=headers, verify='queromaiscredito2.pem')
+            res = session.post("https://queromaiscredito.app/DataPrev/e-consignado/beneficios/cartao_consulta_in100.php", json=data, headers=headers)
 
-            texto_decoded = res.text.encode('latin1').decode('unicode-escape')
+            #time.sleep(20)
 
-            print(f'RETORNO POST: {texto_decoded}')
+            print(f'RETORNO POST: {res.text}')
 
             if res.status_code == 200:
-
-                #time.sleep(30)
-
                 try:
                     headers = {'Content-Type': 'text/html', 'charset':'utf-8'}
                     resumo = session.get(f'https://armazem.capitalbank.systems/_dataPrev/{cpf}/Resumo-{cpf}-{cod_beneficio}.json')
@@ -112,15 +112,10 @@ class API_qmc(object):
                 except Exception as erro:
                     if res.text == '         Erro':
                         return 0, usuario_cod
-                    elif texto_decoded.find('benefício inelegível') != -1:
-                        return 106, usuario_cod
-
-                    elif res.text.find('erro') != -1:
+                    elif res.text.find('Erro') != -1:
                         return 0, usuario_cod
-                    
-                    elif texto_decoded.find('DV inválido') != -1:
+                    elif res.text.find('DV inv\\u00e1lido') != -1:
                         return 0, usuario_cod
-                    
                     return res.text, usuario_cod
-        except Exception as erro:
-            print('get_autorizacao:', erro)
+        except:
+            print('get_autorizacao')
