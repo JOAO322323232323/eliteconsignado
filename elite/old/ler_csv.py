@@ -43,14 +43,14 @@ def ler_csv(arquivo, cpf_coluna='CPF', nb_coluna='NB', cpf_rep_coluna='CPF_REP',
     for index, row in dados_csv.iterrows():
         nome_coluna_cpf = dados_csv.columns[dados_csv.columns.get_loc(cpf_coluna)]
         cpf = row[nome_coluna_cpf]
-        cpf = str(cpf).replace('.', '').replace('-', '').replace(' ', '')
+        cpf = str(int(cpf)).replace('.', '').replace('-', '').replace(' ', '')
 
         while len(cpf) < 11:
             cpf = f'0{cpf}'
 
         nome_coluna_nb = dados_csv.columns[dados_csv.columns.get_loc(nb_coluna)]
         nb = row[nome_coluna_nb]
-        matricula = str(nb).replace('.', '').replace('-', '').replace(' ', '')
+        matricula = str(int(nb)).replace('.', '').replace('-', '').replace(' ', '')
 
         try:
             nome_coluna_cpf_rep = dados_csv.columns[dados_csv.columns.get_loc(cpf_rep_coluna)]
@@ -105,7 +105,7 @@ def ler_csv(arquivo, cpf_coluna='CPF', nb_coluna='NB', cpf_rep_coluna='CPF_REP',
                                     x['ufPagamento'],
                                     x['tipoCredito'],
                                     x['cbcIfPagadora'],
-                                    x['agenciaPagadora'],
+                                    x['tipoCredito'],
                                     conta_corrente,
                                     x['pensaoAlimenticia'],
                                     x['possuiRepresentanteLegal'],
@@ -139,4 +139,4 @@ def ler_csv(arquivo, cpf_coluna='CPF', nb_coluna='NB', cpf_rep_coluna='CPF_REP',
     return df
 
 # Nome arquivo, nome da coluna de cpf, nome da coluna de beneficio
-ler_csv('loteextrato.csv', 'CPF', 'NB', file_name='1809_3')
+ler_csv('CARGA1-VPS.CSV', 'CPF', 'NB', 'CPF_REP', file_name='2208_1')
