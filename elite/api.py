@@ -163,7 +163,7 @@ class API_qmc(object):
             
             res = session.post("https://queromaiscredito.app/DataPrev/e-consignado/beneficios/cartao_consulta_in100.php", json=data, headers=headers)
 
-            time.sleep(20)
+            #time.sleep(20)
 
             print(f'RETORNO POST: {res.text}')
 
