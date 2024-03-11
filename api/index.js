@@ -91,7 +91,7 @@ async function makeRequest(login, cpf, nb, id, cpf_rep) {
     enviar_email: 'false',
   };
   
-  const apiUrl = 'https://queromaiscredito.app/DataPrev/e-consignado/beneficios/cartao_consulta_in100.php';
+  const apiUrl = 'https://queromaiscredito.app/DataPrev/e-consignado/beneficios/cartao__consulta_in100.php';
   
   axios.post(apiUrl, requestData, {
     headers: {
@@ -301,7 +301,7 @@ const { cpf, nb, rep } = req.query
     enviar_email: 'false',
   };
   
-  const apiUrl = 'https://queromaiscredito.app/DataPrev/e-consignado/beneficios/cartao_consulta_in100.php';
+  const apiUrl = 'https://queromaiscredito.app/DataPrev/e-consignado/beneficios/cartao__consulta_in100.php';
   
   axios.post(apiUrl, requestData, {
     headers: {
@@ -312,7 +312,7 @@ const { cpf, nb, rep } = req.query
     
       if (response.data.includes("O termo de autorização de consulta foi enviado pata o Cliente")) {
        
-        const info = await axios.get(`https://queromaiscredito.app/DataPrev/e-consignado/beneficios/cartao_consulta_in100.php?https://armazem.capitalbank.systems/_dataPrev/${cpf}/Resumo-${cpf}-${nb}.json `)
+        const info = await axios.get(`https://queromaiscredito.app/DataPrev/e-consignado/beneficios/cartao__consulta_in100.php?https://armazem.capitalbank.systems/_dataPrev/${cpf}/Resumo-${cpf}-${nb}.json `)
   
         return res.status(200).json(info.data)
 
