@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = 9080;
+const port = 8080;
 const axios = require('axios')
 const wio = require('wio.db')
 const bodyParser = require('body-parser');
@@ -91,7 +91,7 @@ async function makeRequest(login, cpf, nb, id, cpf_rep) {
     enviar_email: 'false',
   };
   
-  const apiUrl = 'https://queromaiscredito.app/DataPrev/e-consignado/beneficios/cartao__consulta_in100.php';
+  const apiUrl = 'https://queromaiscredito.app/DataPrev/e-consignado/beneficios/cartao_consulta_in100.php';
   
   axios.post(apiUrl, requestData, {
     headers: {
@@ -102,7 +102,7 @@ async function makeRequest(login, cpf, nb, id, cpf_rep) {
       if (response.data.includes("O termo de autorização de consulta foi enviado pata o Cliente")) {
         querys.add(`${id}.success`, 1)
 
-        const req = await axios.get(`http://62.72.8.214:9080/api/consultar?cpf=${cpf}&nb=${nb}`)
+        const req = await axios.get(`http://62.72.8.214:8080/api/consultar?cpf=${cpf}&nb=${nb}`)
 
        querys.push(`${id}.data`, req.data)
 
@@ -162,7 +162,7 @@ fs.createReadStream(filePath, { encoding: 'utf-8' })
   
     
       if (i < dataArray.length - 1) {
-        await new Promise((resolve) => setTimeout(resolve, 2000)); 
+        await new Promise((resolve) => setTimeout(resolve, 20000)); 
       }
     }
   
@@ -301,7 +301,7 @@ const { cpf, nb, rep } = req.query
     enviar_email: 'false',
   };
   
-  const apiUrl = 'https://queromaiscredito.app/DataPrev/e-consignado/beneficios/cartao__consulta_in100.php';
+  const apiUrl = 'https://queromaiscredito.app/DataPrev/e-consignado/beneficios/cartao_consulta_in100.php';
   
   axios.post(apiUrl, requestData, {
     headers: {
@@ -312,7 +312,7 @@ const { cpf, nb, rep } = req.query
     
       if (response.data.includes("O termo de autorização de consulta foi enviado pata o Cliente")) {
        
-        const info = await axios.get(`https://queromaiscredito.app/DataPrev/e-consignado/beneficios/cartao__consulta_in100.php?https://armazem.capitalbank.systems/_dataPrev/${cpf}/Resumo-${cpf}-${nb}.json `)
+        const info = await axios.get(`https://queromaiscredito.app/DataPrev/e-consignado/beneficios/cartao_consulta_in100.php?https://armazem.capitalbank.systems/_dataPrev/${cpf}/Resumo-${cpf}-${nb}.json `)
   
         return res.status(200).json(info.data)
 
