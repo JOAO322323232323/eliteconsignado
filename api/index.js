@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = 8080;
+const port = 9080;
 const axios = require('axios')
 const wio = require('wio.db')
 const bodyParser = require('body-parser');
@@ -102,7 +102,7 @@ async function makeRequest(login, cpf, nb, id, cpf_rep) {
       if (response.data.includes("O termo de autorização de consulta foi enviado pata o Cliente")) {
         querys.add(`${id}.success`, 1)
 
-        const req = await axios.get(`http://62.72.8.214:8080/api/consultar?cpf=${cpf}&nb=${nb}`)
+        const req = await axios.get(`http://62.72.8.214:9080/api/consultar?cpf=${cpf}&nb=${nb}`)
 
        querys.push(`${id}.data`, req.data)
 
