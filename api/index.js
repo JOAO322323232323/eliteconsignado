@@ -162,7 +162,7 @@ fs.createReadStream(filePath, { encoding: 'utf-8' })
   
     
       if (i < dataArray.length - 1) {
-        await new Promise((resolve) => setTimeout(resolve, 20000)); 
+        await new Promise((resolve) => setTimeout(resolve, 2000)); 
       }
     }
   
