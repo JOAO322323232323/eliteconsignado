@@ -9,7 +9,6 @@ const path = require('path');
 const { uid } = require('uid')
 const csv = require('csv-parser');
 const excel4node = require('excel4node');
-const moment = require('moment');
 
 const logins = new wio.JsonDatabase({
   databasePath: "database/logins.json",
@@ -23,33 +22,10 @@ app.use(bodyParser.json());
 
 let pendente = false
 
-function resetarLogins() {
 
-  const agora = moment();
+async function makeRequest(login, cpf, nb, id, cpf_rep) {
 
-  if (agora.hour() === 0 && agora.minute() === 0) {
   
-    const arrayToAdd = logins.get('suspensos')
-
-    arrayToAdd.forEach(async login => {
-      const indexToDelete = logins.get("suspensos").findIndex((option) => option === `${login}`);
-       
-      if (indexToDelete !== -1) {
-        const a = logins.get("suspensos");
-        const removed = a.splice(indexToDelete, 1);
-        await logins.set("suspensos", a);
-
-        logins.push('users', removed.toString())
-      }
-      
-    });
-   
-  }
-}
-
-setInterval(resetarLogins, 60000);
-
-
 function gerarNumeroAleatorio(min, max) {
   const range = max - min + 1;
   const randomNumber = Math.floor(Math.random() * range) + min;
@@ -74,10 +50,6 @@ function gerarSeteNumerosAleatoriosString() {
   return numerosString;
 }
 
-
-async function makeRequest(login, cpf, nb, id, cpf_rep) {
-
-  
   const requestData = {
     system: 'FUNCAO',
     cod_operator: login,
@@ -106,17 +78,6 @@ async function makeRequest(login, cpf, nb, id, cpf_rep) {
 
        querys.push(`${id}.data`, req.data)
 
-      } else if (response.data.includes('Erro 1')) {
-        querys.push(`${id}.retestar`, { cpf: cpf, nb: nb, rep: cpf_rep || "" })
-        logins.push('suspensos', login)
-        const indexToDelete = logins.get("users").findIndex((option) => option === `${login}`);
-       
-      if (indexToDelete !== -1) {
-        const a = logins.get("users");
-        const removed = a.splice(indexToDelete, 1);
-        await logins.set("users", a);
-      }
-        
       } else {
         querys.add(`${id}.fail`, 1)
         fs.appendFileSync('errors.txt', response.data+'\n')
@@ -280,52 +241,15 @@ app.post('/api/criar-campanha', (req, res) => {
 
 
 app.get('/api/consultar/', async (req, res) => {
-const { cpf, nb, rep } = req.query
+const { cpf, nb } = req.query
 
   if (!cpf || !nb ) {
     return res.status(400).json({ error: 'Parâmetros CPF e NB obrigatorios.' })
   }
 
-  const login = await getRandomLogin();
-
-  const requestData = {
-    system: 'FUNCAO',
-    cod_operator: login,
-    name: 'fdsgfgffbdgh',
-    cpf: cpf,
-    cpf_represent: rep || '',
-    tel: `(21)99${gerarSeteNumerosAleatoriosString()}`,
-    cod_beneficio: nb,
-    enviar_sms: 'false',
-    enviar_whatsapp: 'true',
-    enviar_email: 'false',
-  };
+  const info = await axios.get(`https://queromaiscredito.app/DataPrev/e-consignado/beneficios/cartao_consulta_in100.php?https://armazem.capitalbank.systems/_dataPrev/${cpf}/Resumo-${cpf}-${nb}.json `)
   
-  const apiUrl = 'https://queromaiscredito.app/DataPrev/e-consignado/beneficios/cartao_consulta_in100.php';
-  
-  axios.post(apiUrl, requestData, {
-    headers: {
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-  })
-    .then(async response => {
-    
-      if (response.data.includes("O termo de autorização de consulta foi enviado pata o Cliente")) {
-       
-        const info = await axios.get(`https://queromaiscredito.app/DataPrev/e-consignado/beneficios/cartao_consulta_in100.php?https://armazem.capitalbank.systems/_dataPrev/${cpf}/Resumo-${cpf}-${nb}.json `)
-  
-        return res.status(200).json(info.data)
-
-
-      } else {
-       return res.status(400).json({ error: 'Não foi possivel concluir a consulta'})
-      }
-    })
-    .catch(error => {
-      console.error(error);
-    });
-
-
+return res.status(200).json(info.data)
   
 })
 
